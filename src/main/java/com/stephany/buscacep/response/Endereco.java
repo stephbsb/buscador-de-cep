@@ -1,6 +1,5 @@
 package com.stephany.buscacep.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +11,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Builder
 @ApiModel("Endereço")
-public class BuscaCepResponse {
+public class Endereco {
 
     @ApiModelProperty(value = "Nome da Rua", example = "Rua das Palmeiras")
     @JsonProperty("rua")

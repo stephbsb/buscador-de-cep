@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @ApiModel("Erro")
-public class ErroResponse {
+public class ApiError {
 
     @ApiModelProperty(value = "Mensagem de erro", example = "CEP inválido")
     @JsonProperty("erro")
