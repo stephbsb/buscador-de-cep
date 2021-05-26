@@ -23,7 +23,7 @@ public class BuscaCepService {
 
             log.info("m=buscaCep, stage=tentativa, cep={}", novoCep);
             isCepValido(novoCep);
-            endereco = findByCep(novoCep);
+            endereco = findByCep(novoCep.toString());
 
             if(endereco != null){
                 log.info("m=buscaCep, stage=success, cep-novo={}, cep-original={}, endereco={}", novoCep, cep, endereco);
@@ -61,7 +61,7 @@ public class BuscaCepService {
         return count;
     }
 
-    public Endereco findByCep(StringBuilder novoCep){
-        return enderecosMocados.get(novoCep.toString());
+    public Endereco findByCep(String cep){
+        return enderecosMocados.get(cep);
     }
 }
