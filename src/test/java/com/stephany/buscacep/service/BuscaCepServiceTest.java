@@ -1,19 +1,28 @@
 package com.stephany.buscacep.service;
 
 import com.stephany.buscacep.exception.CepInvalidoException;
+import com.stephany.buscacep.response.Endereco;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class BuscaCepServiceTest {
 
-    @Autowired
+    @Spy
+    @InjectMocks
     private BuscaCepService buscaCepService;
 
     @ParameterizedTest
@@ -60,27 +69,62 @@ public class BuscaCepServiceTest {
     }
 
     @Test
-    @DisplayName("Retorna Endereco para endereco valido")
-    public void retornaEnderecoParaCepValido(){
-
+    @DisplayName("Retorna Endereco para cep valido sem adicionar zeros")
+    public void retornaEnderecoParaCepValido() throws CepInvalidoException {
+        mockFindByCepExiste("12345678");
+        Endereco endereco = buscaCepService.buscaCep("12345678");
+        assertNotNull(endereco);
+        Mockito.verify(buscaCepService,Mockito.times(0)).adicionaZeroNoFinal(any(),any());
     }
 
     @Test
     @DisplayName("Retorna Endereco para endereco valido apos adicionar zeros")
-    public void retornaEnderecoParaCepValidoAposAdicionarZeros(){
-
+    public void retornaEnderecoParaCepValidoAposAdicionarZeros() throws CepInvalidoException{
+        mockFindByCepExiste("12345000");
+        Endereco endereco = buscaCepService.buscaCep("12345678");
+        assertNotNull(endereco);
+        Mockito.verify(buscaCepService,Mockito.times(3)).adicionaZeroNoFinal(any(),any());
     }
 
     @Test
+    @DisplayName("Retorna Endereco para endereco valido apos adicionar zeros pulando zeros existentes")
+    public void retornaEnderecoParaCepValidoAposAdicionarZerosComZerosExistentes() throws CepInvalidoException{
+        mockFindByCepExiste("12340000");
+        Endereco endereco = buscaCepService.buscaCep("12345600");
+        assertNotNull(endereco);
+        Mockito.verify(buscaCepService,Mockito.times(2)).adicionaZeroNoFinal(any(),any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"12345-678", "12345", "123456789", "abcdefgh", "", "00000000", "00100000"})
     @DisplayName("Lanca excessao para CEP invalido")
-    public void lancaExcessaoParaCepInvalido(){
-
+    public void lancaExcessaoParaCepInvalido(String cep) {
+        assertThrows(CepInvalidoException.class, () -> buscaCepService.buscaCep(cep));
     }
 
     @Test
-    @DisplayName("Lanca excessao para CEP inexistente")
-    public void lancaExcessaoParaCepInexistente(){
+    @DisplayName("Lanca excessao para CEP inexistente apos todos as tentativas de adicionar zeros")
+    public void lancaExcessaoParaCepInexistente() {
+        mockFindByCepNaoExiste();
+        assertThrows(CepInvalidoException.class, () -> buscaCepService.buscaCep("12345600"));
+        Mockito.verify(buscaCepService,Mockito.times(6)).adicionaZeroNoFinal(any(),any());
+    }
 
+    private void mockFindByCepExiste(String cep){
+        Endereco endereco = Endereco.builder()
+                .rua("Travessa Oriente")
+                .bairro("Autran Nunes")
+                .cidade("Fortaleza")
+                .estado("CE")
+                .build();
+
+        Mockito.when(buscaCepService.findByCep(cep))
+                .thenReturn(endereco);
+    }
+
+    private void mockFindByCepNaoExiste(){
+        Mockito.when(buscaCepService.findByCep(anyString()))
+                .thenReturn(null);
     }
 
 }
