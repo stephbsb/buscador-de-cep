@@ -21,9 +21,9 @@ public class BuscaCepService {
 
         while (count <= TAMANHO_MAX) {
 
-            log.info("m=buscaCep, stage=tentativa, cep={}", novoCep, count);
+            log.info("m=buscaCep, stage=tentativa, cep={}", novoCep);
             isCepValido(novoCep);
-            endereco = enderecosMocados.get(novoCep.toString());
+            endereco = findByCep(novoCep);
 
             if(endereco != null){
                 log.info("m=buscaCep, stage=success, cep-novo={}, cep-original={}, endereco={}", novoCep, cep, endereco);
@@ -38,6 +38,7 @@ public class BuscaCepService {
     }
 
     public void isCepValido(StringBuilder cep) throws CepInvalidoException {
+        log.info("m=buscaCep, stage=validacao, cep={}", cep);
         if (cep.isEmpty()) {
             throw new CepInvalidoException("CEP vazio ou nulo");
         } else if (!cep.toString().matches("\\d{8}")) {
@@ -58,5 +59,9 @@ public class BuscaCepService {
         cep.deleteCharAt(TAMANHO_MAX - count).append("0");
         count++;
         return count;
+    }
+
+    public Endereco findByCep(StringBuilder novoCep){
+        return enderecosMocados.get(novoCep.toString());
     }
 }
