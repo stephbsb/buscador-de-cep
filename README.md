@@ -1,12 +1,12 @@
 # Buscador de CEP - Problema
 
 Eu, como usuário, quero informar meu CEP e obter o nome da minha 
-    RUA, BAIRRO, CIDADE e ESTADO para preencher meus dados de cadastro de forma automática.
-    Os critérios de aceite dessa história são:
-        · Dado um CEP válido, deve retornar o endereço correspondente
-        · Dado um CEP válido, que não exista o endereço, deve substituir um dígito da direita para a esquerda por zero
-          até que o endereço seja localizado (Exemplo: Dado 22333999 tentar com 22333990, 22333900 …)
-        · Dado um CEP inválido, deve retornar uma mensagem reportando o erro: "CEP inválido"
+RUA, BAIRRO, CIDADE e ESTADO para preencher meus dados de cadastro de forma automática.
+Os critérios de aceite dessa história são:
+- Dado um CEP válido, deve retornar o endereço correspondente
+- Dado um CEP válido, que não exista o endereço, deve substituir um dígito da direita para a esquerda por zero
+  até que o endereço seja localizado (Exemplo: Dado 22333999 tentar com 22333990, 22333900 …)
+- Dado um CEP inválido, deve retornar uma mensagem reportando o erro: "CEP inválido"
 
 Para a solução do problema foi criado um serviço rest que recebe requisições atraves de um endpoint exposto que irá ter como 
 parâmetro o cep do usuario e irá retornar os dados mensionados anteriormente.
