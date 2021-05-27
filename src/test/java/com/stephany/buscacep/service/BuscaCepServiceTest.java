@@ -14,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -74,7 +73,7 @@ public class BuscaCepServiceTest {
         mockFindByCepExiste("12345678");
         Endereco endereco = buscaCepService.buscaCep("12345678");
         assertNotNull(endereco);
-        Mockito.verify(buscaCepService,Mockito.times(0)).adicionaZeroNoFinal(any(),any());
+        Mockito.verify(buscaCepService,Mockito.times(0)).adicionaZeroNoFinal(any(),anyInt());
     }
 
     @Test
@@ -83,7 +82,7 @@ public class BuscaCepServiceTest {
         mockFindByCepExiste("12345000");
         Endereco endereco = buscaCepService.buscaCep("12345678");
         assertNotNull(endereco);
-        Mockito.verify(buscaCepService,Mockito.times(3)).adicionaZeroNoFinal(any(),any());
+        Mockito.verify(buscaCepService,Mockito.times(3)).adicionaZeroNoFinal(any(),anyInt());
     }
 
     @Test
@@ -92,7 +91,7 @@ public class BuscaCepServiceTest {
         mockFindByCepExiste("12340000");
         Endereco endereco = buscaCepService.buscaCep("12345600");
         assertNotNull(endereco);
-        Mockito.verify(buscaCepService,Mockito.times(2)).adicionaZeroNoFinal(any(),any());
+        Mockito.verify(buscaCepService,Mockito.times(2)).adicionaZeroNoFinal(any(),anyInt());
     }
 
     @ParameterizedTest
@@ -107,7 +106,7 @@ public class BuscaCepServiceTest {
     public void lancaExcessaoParaCepInexistente() {
         mockFindByCepNaoExiste();
         assertThrows(CepInvalidoException.class, () -> buscaCepService.buscaCep("12345600"));
-        Mockito.verify(buscaCepService,Mockito.times(6)).adicionaZeroNoFinal(any(),any());
+        Mockito.verify(buscaCepService,Mockito.times(6)).adicionaZeroNoFinal(any(),anyInt());
     }
 
     private void mockFindByCepExiste(String cep){
