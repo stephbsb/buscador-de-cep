@@ -16,7 +16,7 @@ public class BuscaCepService {
 
     public Endereco buscaCep(String cep) throws CepInvalidoException {
         StringBuilder novoCep = new StringBuilder(cep);
-        Integer count = 1;
+        int count = 1;
         Endereco endereco;
 
         while (count <= TAMANHO_MAX) {
@@ -38,9 +38,8 @@ public class BuscaCepService {
     }
 
     public void isCepValido(StringBuilder cep) throws CepInvalidoException {
-        log.info("m=buscaCep, stage=validacao, cep={}", cep);
-        if (cep.isEmpty()) {
-            throw new CepInvalidoException("CEP vazio ou nulo");
+        if (cep.toString().isEmpty()) {
+            throw new CepInvalidoException("CEP vazio");
         } else if (!cep.toString().matches("\\d{8}")) {
             throw new CepInvalidoException("Formato de CEP inválido");
         } else if (Integer.parseInt(cep.toString()) < MENOR_CEP_VALIDO) {
@@ -48,7 +47,7 @@ public class BuscaCepService {
         }
     }
 
-    public int adicionaZeroNoFinal(StringBuilder cep, Integer count) {
+    public int adicionaZeroNoFinal(StringBuilder cep, int count) {
         while(cep.charAt(TAMANHO_MAX - count) == '0'){
             if(count < TAMANHO_MAX){
                 count++;
